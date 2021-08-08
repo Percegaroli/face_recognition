@@ -28,8 +28,13 @@ const loadQueryImage = async () => {
 }
 
 const recognizeFaces = async () => {
-  const [ referenceImages, queryImage ] = await Promise.all([loadReferenceImages(), loadQueryImage()]);
-  const queryImageDescriptorTask = faceapi.detectAllFaces(queryImage).withFaceLandmarks().withFaceDescriptors();
+  const [ referenceImages, queryImage ] = await Promise.all([
+    loadReferenceImages(),
+    loadQueryImage()
+  ]);
+  const queryImageDescriptorTask = faceapi.detectAllFaces(queryImage)
+    .withFaceLandmarks()
+    .withFaceDescriptors();
   const referenceImagesDescriptors = await createReferenceLabeledDescriptors(referenceImages);
   const faceMatcher = new faceapi.FaceMatcher(referenceImagesDescriptors);
   drawResults(faceMatcher, await queryImageDescriptorTask, queryImage);
