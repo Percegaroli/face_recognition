@@ -63,7 +63,6 @@ const createDrawBox = (descriptors, bestMatch) => {
 }
 
 const saveResultFile = async (resultFile) => {
-  const outputDir = await readdir(foldersPath.output);
   writeFile(`${foldersPath.output}/${v4()}.jpg`, resultFile.toBuffer('image/jpeg'));
 }
 
