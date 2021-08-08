@@ -9,6 +9,7 @@
   "dependencies": {
     "@tensorflow/tfjs": "^3.8.0",
     "@vladmandic/face-api": "^1.4.1",
-    "canvas": "^2.8.0"
+    "canvas": "^2.8.0",
+    "uuid": "^8.3.2"
   }
 }

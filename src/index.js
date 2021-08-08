@@ -1,6 +1,7 @@
 const faceapi= require('@vladmandic/face-api/dist/face-api.node-cpu.js');
 const canvas = require('canvas');
 const { readdir, writeFile } = require('fs/promises')
+const { v4 } = require('uuid');
 const { foldersPath, referenceName, resultBox } = require('./config');
 
 const { Canvas, Image, ImageData } = canvas
@@ -63,8 +64,7 @@ const createDrawBox = (descriptors, bestMatch) => {
 
 const saveResultFile = async (resultFile) => {
   const outputDir = await readdir(foldersPath.output);
-  const fileName = outputDir.length + 1;
-  writeFile(`${foldersPath.output}/${fileName}.jpg`, resultFile.toBuffer('image/jpeg'));
+  writeFile(`${foldersPath.output}/${v4()}.jpg`, resultFile.toBuffer('image/jpeg'));
 }
 
 const main = async () => {
