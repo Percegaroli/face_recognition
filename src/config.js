@@ -2,7 +2,8 @@ module.exports = {
   foldersPath: {
     output: './src/output',
     queryImage: './src/queryImage',
-    referenceImages: './src/referenceImages'
+    referenceImages: './src/referenceImages',
+    models: './src/models'
   },
   resultBox: {
     matchColor: 'rgba(78, 205, 196, 1)',

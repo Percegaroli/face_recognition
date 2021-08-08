@@ -8,12 +8,11 @@ const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
 
 const initializeNeuralModels = async () => {
-  const modelsFolderPath = './src/model';
   await Promise.all([
-    faceapi.nets.ssdMobilenetv1.loadFromDisk(modelsFolderPath),
-    faceapi.nets.tinyFaceDetector.loadFromDisk(modelsFolderPath),
-    faceapi.nets.faceLandmark68Net.loadFromDisk(modelsFolderPath),
-    faceapi.nets.faceRecognitionNet.loadFromDisk(modelsFolderPath)
+    faceapi.nets.ssdMobilenetv1.loadFromDisk(foldersPath.models),
+    faceapi.nets.tinyFaceDetector.loadFromDisk(foldersPath.models),
+    faceapi.nets.faceLandmark68Net.loadFromDisk(foldersPath.models),
+    faceapi.nets.faceRecognitionNet.loadFromDisk(foldersPath.models)
   ]);
 }
 
