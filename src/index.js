@@ -1,8 +1,8 @@
-const faceapi= require('@vladmandic/face-api/dist/face-api.node-cpu.js');
+const faceapi = require('@vladmandic/face-api/dist/face-api.node-cpu.js');
 const canvas = require('canvas');
 const { readdir, writeFile } = require('fs/promises')
 const { v4 } = require('uuid');
-const { foldersPath, referenceName, resultBox } = require('./config');
+const { foldersPath, referenceName, resultBox, distance } = require('./config');
 
 const { Canvas, Image, ImageData } = canvas
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
@@ -15,29 +15,31 @@ const initializeNeuralModels = async () => {
   ]);
 }
 
-const loadReferenceImages = async () => {
-  const referenceFolderPath = foldersPath.referenceImages;
-  const referenceImagesFolder = await readdir(referenceFolderPath);
-  return Promise.all(referenceImagesFolder.map(reference => canvas.loadImage(`${referenceFolderPath}/${reference}`)));
-}
+const loadReferenceImages = () => loadAllImagesFromFolder(foldersPath.referenceImages)
 
-const loadQueryImage = async () => {
-  const queryImageFolderPath = foldersPath.queryImage;
-  const queryImagesFolder = await readdir(queryImageFolderPath);
-  return canvas.loadImage(`${queryImageFolderPath}/${queryImagesFolder[0]}`);
+const loadQueryImages = () => loadAllImagesFromFolder(foldersPath.queryImage)
+
+const loadAllImagesFromFolder = async (folderPath) => {
+  const imagesPath = await readdir(folderPath);
+  return Promise.all(imagesPath.map(image => canvas.loadImage(`${folderPath}/${image}`)));
 }
 
 const recognizeFaces = async () => {
-  const [ referenceImages, queryImage ] = await Promise.all([
+  const [ referenceImages, queryImages ] = await Promise.all([
     loadReferenceImages(),
-    loadQueryImage()
+    loadQueryImages()
   ]);
-  const queryImageDescriptorTask = faceapi.detectAllFaces(queryImage)
-    .withFaceLandmarks()
-    .withFaceDescriptors();
+  const queryImagesDescriptorTask = createQueryImagesDescriptorTasks(queryImages);
   const referenceImagesDescriptors = await createReferenceLabeledDescriptors(referenceImages);
-  const faceMatcher = new faceapi.FaceMatcher(referenceImagesDescriptors);
-  drawResults(faceMatcher, await queryImageDescriptorTask, queryImage);
+  const faceMatcher = new faceapi.FaceMatcher(referenceImagesDescriptors, distance);
+  const queryImagesDescriptors = await Promise.all(queryImagesDescriptorTask);
+  queryImagesDescriptors.forEach((queryImageDescriptors, index) => drawResults(faceMatcher, queryImageDescriptors, queryImages[index]));
+}
+
+const createQueryImagesDescriptorTasks = (queryImages) => {
+  return queryImages.map(queryImage => faceapi.detectAllFaces(queryImage)
+    .withFaceLandmarks()
+    .withFaceDescriptors());
 }
 
 const createReferenceLabeledDescriptors = async (referenceImages) => {

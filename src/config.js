@@ -9,5 +9,6 @@ module.exports = {
     matchColor: 'rgba(78, 205, 196, 1)',
     unknownPersonColor: 'rgba(192, 57, 43, 1)' 
   },
-  referenceName: 'Keanu'
+  referenceName: 'Keanu',
+  distance: 0.6
 }
