@@ -36,6 +36,7 @@ After downloading all dependencies, follow these steps:
 * change all images on src/referenceImages with pictures of the person you want to identity as references;
 * change all images on src/imagesQuery with pictures where you want to try to identify your reference;
 * delete all images inside src/output;
+* change the referenceName in src/config.js with the name you want to show at the box aboxe the person face.
 
 After you're done, simply run this command:
 
@@ -50,8 +51,3 @@ npm start
 ```
 
 After a few minutes the results will be located at src/output.
-
-
-
-
-
